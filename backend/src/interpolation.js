@@ -29,7 +29,7 @@ function homogenize(records) {
   const minTs = Math.min(...parsed.map(r => r.ts));
   const maxTs = Math.max(...parsed.map(r => r.ts));
 
-  const startTs = Math.ceil(minTs / MS_5MIN) * MS_5MIN;
+  const startTs = Math.floor(minTs / MS_5MIN) * MS_5MIN;
   const endTs   = Math.floor(maxTs / MS_5MIN) * MS_5MIN;
 
 
@@ -88,9 +88,9 @@ function homogenize(records) {
     for (const field of categoricFields) {
       if (prev && next) {
         result[field] = diffPrev <= diffNext ? prev[field] : next[field];
-      } else if (prev) {
+      } else if (prev && !isND(prev[field])) {
         result[field] = diffPrev <= MS_2_5MIN ? prev[field] : "ND";
-      } else if (next) {
+      } else if (next && !isND(next[field])) {
         result[field] = diffNext <= MS_2_5MIN ? next[field] : "ND";
       } else {
         result[field] = "ND";
