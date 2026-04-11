@@ -35,19 +35,21 @@ export default function App() {
   const [fileName, setFileName] = useState(null);
 
   const handleFileUpload = async (e) => {
-    const file = e.target.files[0];
-    if (!file) return;
-    try {
-      const text = await file.text();
-      const json = JSON.parse(text);
-      setOriginalData(json);
-      setFileName(file.name);
-      setProcessedData([]);
-      setError(null);
-    } catch {
-      setError("Error leyendo el archivo. Asegúrate de que sea un JSON válido.");
-    }
-  };
+  const file = e.target.files[0];
+  if (!file) return;
+  try {
+    const text = await file.text();
+    const json = JSON.parse(text);
+    const isValid = Array.isArray(json) && json.every(r => r.fecha && r.hora);
+    if (!isValid) throw new Error();
+    setOriginalData(json);
+    setFileName(file.name);
+    setProcessedData([]);
+    setError(null);
+  } catch {
+    setError("Error leyendo el archivo. Asegúrate de que sea un JSON válido.");
+  }
+};
 
   const handleHomogenize = async () => {
     if (originalData.length === 0) return;
@@ -56,8 +58,9 @@ export default function App() {
       const res = await axios.post(`${API}/homogenize`, originalData);
       setProcessedData(res.data);
       setError(null);
-    } catch {
-      setError("Error al conectar con el servidor.");
+    } 
+    catch (err) {
+    setError(err.response?.data?.message || "Error al procesar datos.");
     } finally {
       setLoading(false);
     }
