@@ -5,6 +5,13 @@ Transforma datos meteorológicos de estaciones a intervalos de 5 minutos.
 - Backend: Node.js + Express + MongoDB
 - Frontend: React + Chart.js
 - Infraestructura: Docker + Nginx
+- 
+## Por qué estas tecnologías
+
+- **Node.js + Express** porque el algoritmo ya estaba en JavaScript, era natural mantener el mismo lenguaje en el backend.
+- **MongoDB** porque los datos de entrada y salida son arrays JSON, encajan bien con documentos NoSQL sin necesidad de definir esquemas rígidos.
+- **React** para manejar el estado de la tabla y la gráfica de forma reactiva cuando llegan los datos del servidor.
+- **Docker** para que cualquier persona pueda levantar el proyecto con un solo comando sin instalar dependencias manualmente.
 
 ### Requisitos
 - Node.js >= 18
